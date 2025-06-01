@@ -322,167 +322,170 @@ function clearDashboard() {
         </div>
     `;
 }
-
 // Signal Processing Functions
 function initializeSignalProcessor() {
     canvas = document.getElementById('signalCanvas');
     if (canvas) {
         ctx = canvas.getContext('2d');
-        generateSignalData();
+        canvas.width = 800;
+        canvas.height = 400;
         updateSignal();
     }
 }
 
+function updateSignal() {
+    // Update display values
+    const frequency = document.getElementById('frequency');
+    const amplitude = document.getElementById('amplitude');
+    const cutoffFreq = document.getElementById('cutoffFreq');
+    
+    if (frequency) {
+        document.getElementById('frequencyValue').textContent = frequency.value;
+    }
+    if (amplitude) {
+        document.getElementById('amplitudeValue').textContent = amplitude.value;
+    }
+    if (cutoffFreq) {
+        document.getElementById('cutoffFreqValue').textContent = cutoffFreq.value;
+    }
+    
+    generateSignalData();
+    drawSignals();
+}
+
 function generateSignalData() {
-    const signalType = document.getElementById('signalType')?.value || 'sine';
-    const frequency = parseFloat(document.getElementById('frequency')?.value || 5);
+    if (!canvas) return;
+    
+    const waveType = document.getElementById('waveType')?.value || 'sine';
+    const frequency = parseFloat(document.getElementById('frequency')?.value || 10);
     const amplitude = parseFloat(document.getElementById('amplitude')?.value || 1);
+    const filterType = document.getElementById('filterType')?.value || 'none';
+    const cutoffFreq = parseFloat(document.getElementById('cutoffFreq')?.value || 10);
+    const modulationType = document.getElementById('modulationType')?.value || 'none';
+    
+    const sampleRate = 1000;
+    const duration = 2; // 2 seconds
+    const samples = sampleRate * duration;
     
     signalData = [];
-    const samples = 800;
-    const timeSpan = 2; // 2 seconds
+    filteredData = [];
+    modulatedData = [];
     
+    // Generate original signal
     for (let i = 0; i < samples; i++) {
-        const t = (i / samples) * timeSpan;
-        let value = 0;
+        const t = i / sampleRate;
+        const omega = 2 * Math.PI * frequency * t;
         
-        switch (signalType) {
+        let value = 0;
+        switch (waveType) {
             case 'sine':
-                value = amplitude * Math.sin(2 * Math.PI * frequency * t);
+                value = amplitude * Math.sin(omega);
                 break;
             case 'square':
-                value = amplitude * Math.sign(Math.sin(2 * Math.PI * frequency * t));
+                value = amplitude * Math.sign(Math.sin(omega));
                 break;
             case 'triangle':
-                value = amplitude * (2 / Math.PI) * Math.asin(Math.sin(2 * Math.PI * frequency * t));
+                value = amplitude * (2 / Math.PI) * Math.asin(Math.sin(omega));
                 break;
             case 'sawtooth':
                 value = amplitude * (2 * (t * frequency - Math.floor(t * frequency + 0.5)));
                 break;
         }
-        
         signalData.push(value);
     }
     
+    // Apply filtering
     filteredData = [...signalData];
-}
-
-function updateSignal() {
-    generateSignalData();
-    applyFilter();
-    applyModulation();
-    drawSignal();
-    updateControlValues();
-}
-
-function updateControlValues() {
-    const freqValue = document.getElementById('freqValue');
-    const ampValue = document.getElementById('ampValue');
-    const frequency = document.getElementById('frequency')?.value;
-    const amplitude = document.getElementById('amplitude')?.value;
-    
-    if (freqValue) freqValue.textContent = frequency;
-    if (ampValue) ampValue.textContent = parseFloat(amplitude).toFixed(1);
-}
-
-function applyFilter() {
-    const filterType = document.getElementById('filterType')?.value || 'none';
-    
-    if (filterType === 'none') {
-        filteredData = [...signalData];
-        return;
+    if (filterType !== 'none') {
+        filteredData = applyFilter(signalData, filterType, cutoffFreq, frequency);
     }
     
-    // Simple filter implementations
-    filteredData = [...signalData];
+    // Apply modulation to the original signal (not filtered)
+    modulatedData = [...signalData];
+    if (modulationType !== 'none') {
+        modulatedData = applyModulation(signalData, modulationType, frequency);
+    }
+}
+
+function applyFilter(data, filterType, cutoffFreq, signalFreq) {
+    // Simple frequency-based attenuation
+    const attenuation = calculateAttenuation(signalFreq, cutoffFreq, filterType);
+    return data.map(value => value * attenuation);
+}
+
+function calculateAttenuation(signalFreq, cutoffFreq, filterType) {
+    const ratio = signalFreq / cutoffFreq;
     
     switch (filterType) {
         case 'lowpass':
-            filteredData = lowPassFilter(filteredData, 0.1);
-            break;
+            // Attenuate frequencies above cutoff
+            return ratio > 1 ? Math.exp(-(ratio - 1) * 2) : 1;
         case 'highpass':
-            filteredData = highPassFilter(filteredData, 0.1);
-            break;
-        case 'bandpass':
-            filteredData = bandPassFilter(filteredData, 0.05, 0.15);
-            break;
+            // Attenuate frequencies below cutoff
+            return ratio < 1 ? Math.exp(-(1 / ratio - 1) * 2) : 1;
+        default:
+            return 1;
     }
 }
 
-function lowPassFilter(data, alpha) {
-    const filtered = [data[0]];
-    for (let i = 1; i < data.length; i++) {
-        filtered[i] = alpha * data[i] + (1 - alpha) * filtered[i - 1];
-    }
-    return filtered;
-}
-
-function highPassFilter(data, alpha) {
-    const filtered = [0];
-    for (let i = 1; i < data.length; i++) {
-        filtered[i] = alpha * (filtered[i - 1] + data[i] - data[i - 1]);
-    }
-    return filtered;
-}
-
-function bandPassFilter(data, lowAlpha, highAlpha) {
-    let temp = lowPassFilter(data, lowAlpha);
-    return highPassFilter(temp, highAlpha);
-}
-
-function applyModulation() {
-    const modType = document.getElementById('modulation')?.value || 'none';
+function applyModulation(data, modulationType, carrierFreq) {
+    const modulated = [];
+    const sampleRate = 1000;
+    const modulationFreq = carrierFreq * 0.1; // Modulation frequency is 10% of carrier
     
-    if (modType === 'none') return;
-    
-    const carrierFreq = 20; // Carrier frequency
-    const samples = filteredData.length;
-    
-    for (let i = 0; i < samples; i++) {
-        const t = (i / samples) * 2; // 2 seconds timespan
-        const carrier = Math.sin(2 * Math.PI * carrierFreq * t);
+    for (let i = 0; i < data.length; i++) {
+        const t = i / sampleRate;
+        const carrierOmega = 2 * Math.PI * carrierFreq * 5 * t; // Higher frequency carrier
         
-        switch (modType) {
+        let value = data[i];
+        switch (modulationType) {
             case 'am':
-                filteredData[i] = (1 + 0.5 * filteredData[i]) * carrier * 0.5;
+                // Amplitude modulation
+                value = (1 + 0.5 * data[i]) * Math.sin(carrierOmega);
                 break;
             case 'fm':
-                const phase = 2 * Math.PI * carrierFreq * t + filteredData[i];
-                filteredData[i] = Math.sin(phase) * 0.5;
+                // Frequency modulation
+                const deviation = data[i] * 0.5;
+                value = Math.sin(carrierOmega + deviation);
                 break;
         }
+        modulated.push(value);
     }
+    return modulated;
 }
 
-function drawSignal() {
-    if (!canvas || !ctx) return;
+function drawSignals() {
+    if (!ctx || !canvas) return;
     
-    const width = canvas.width;
-    const height = canvas.height;
-    
-    // Clear canvas
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Draw grid
     drawGrid();
     
-    // Draw original signal (faded)
-    drawWaveform(signalData, 'rgba(100, 100, 100, 0.3)', 1);
+    // Draw signals
+    const filterType = document.getElementById('filterType')?.value || 'none';
+    const modulationType = document.getElementById('modulationType')?.value || 'none';
     
-    // Draw filtered/modulated signal
-    drawWaveform(filteredData, '#32b8c6', 2);
+    // Always draw original signal
+    drawWaveform(signalData, '#888888', 2, 'Original');
     
-    // Draw labels
-    drawLabels();
+    // Draw filtered signal if filter is applied
+    if (filterType !== 'none') {
+        drawWaveform(filteredData, '#1FB8CD', 2, 'Filtered');
+    }
+    
+    // Draw modulated signal if modulation is applied
+    if (modulationType !== 'none') {
+        drawWaveform(modulatedData, '#B4413C', 2, 'Modulated');
+    }
 }
 
 function drawGrid() {
-    ctx.strokeStyle = 'rgba(50, 184, 198, 0.1)';
+    ctx.strokeStyle = '#333';
     ctx.lineWidth = 1;
     
     // Vertical lines
-    for (let i = 0; i <= 10; i++) {
-        const x = (canvas.width / 10) * i;
+    for (let x = 0; x <= canvas.width; x += 40) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
@@ -490,8 +493,7 @@ function drawGrid() {
     }
     
     // Horizontal lines
-    for (let i = 0; i <= 6; i++) {
-        const y = (canvas.height / 6) * i;
+    for (let y = 0; y <= canvas.height; y += 40) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(canvas.width, y);
@@ -499,162 +501,117 @@ function drawGrid() {
     }
     
     // Center line
-    ctx.strokeStyle = 'rgba(50, 184, 198, 0.3)';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#555';
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, canvas.height / 2);
     ctx.lineTo(canvas.width, canvas.height / 2);
     ctx.stroke();
 }
 
-function drawWaveform(data, color, lineWidth) {
-    if (data.length < 2) return;
+function drawWaveform(data, color, lineWidth, label) {
+    if (!data || data.length === 0) return;
     
     ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
     
-    const maxValue = Math.max(...data.map(Math.abs));
-    const scale = maxValue > 0 ? (canvas.height * 0.4) / maxValue : 1;
+    const xStep = canvas.width / data.length;
+    const yCenter = canvas.height / 2;
+    const yScale = canvas.height / 4; // Scale to fit in canvas
     
-    data.forEach((value, index) => {
-        const x = (canvas.width / (data.length - 1)) * index;
-        const y = canvas.height / 2 - value * scale;
+    for (let i = 0; i < data.length; i++) {
+        const x = i * xStep;
+        const y = yCenter - data[i] * yScale;
         
-        if (index === 0) {
+        if (i === 0) {
             ctx.moveTo(x, y);
         } else {
             ctx.lineTo(x, y);
         }
-    });
+    }
     
     ctx.stroke();
-    
-    // Add glow effect for main signal
-    if (lineWidth > 1) {
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 10;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-    }
-}
-
-function drawLabels() {
-    ctx.fillStyle = '#cccccc';
-    ctx.font = '12px Arial';
-    ctx.textAlign = 'left';
-    
-    // Time axis label
-    ctx.fillText('Time (s)', 10, canvas.height - 10);
-    
-    // Amplitude axis label
-    ctx.save();
-    ctx.translate(15, canvas.height / 2);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText('Amplitude', 0, 0);
-    ctx.restore();
-    
-    // Signal type label
-    const signalType = document.getElementById('signalType')?.value || 'sine';
-    ctx.textAlign = 'right';
-    ctx.fillText(`Signal: ${signalType.charAt(0).toUpperCase() + signalType.slice(1)}`, canvas.width - 10, 20);
-    
-    // Filter label
-    const filterType = document.getElementById('filterType')?.value || 'none';
-    if (filterType !== 'none') {
-        ctx.fillText(`Filter: ${filterType}`, canvas.width - 10, 40);
-    }
 }
 
 // Audio Functions
-function initializeAudioContext() {
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+function toggleAudio() {
+    const btn = document.getElementById('audioBtn');
+    if (!btn) return;
+    
+    if (isAudioPlaying) {
+        stopAudio();
+        btn.textContent = 'Play Audio';
+        btn.classList.remove('btn--secondary');
+        btn.classList.add('btn--primary');
+    } else {
+        playAudio();
+        btn.textContent = 'Stop Audio';
+        btn.classList.remove('btn--primary');
+        btn.classList.add('btn--secondary');
     }
-    return audioContext;
 }
 
 function playAudio() {
-    if (isAudioPlaying) {
-        stopAudio();
-        return;
-    }
-    
     try {
-        const context = initializeAudioContext();
-        
-        // Resume context if suspended (required for some browsers)
-        if (context.state === 'suspended') {
-            context.resume();
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
         
-        const signalType = document.getElementById('signalType')?.value || 'sine';
-        const frequency = parseFloat(document.getElementById('frequency')?.value || 5);
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        
+        const frequency = parseFloat(document.getElementById('frequency')?.value || 10);
         const amplitude = parseFloat(document.getElementById('amplitude')?.value || 1);
+        const filterType = document.getElementById('filterType')?.value || 'none';
+        const cutoffFreq = parseFloat(document.getElementById('cutoffFreq')?.value || 10);
         
         // Create oscillator
-        oscillator = context.createOscillator();
-        gainNode = context.createGain();
+        oscillator = audioContext.createOscillator();
+        gainNode = audioContext.createGain();
         
-        // Set oscillator type
-        oscillator.type = signalType;
-        oscillator.frequency.setValueAtTime(frequency * 100, context.currentTime); // Scale up frequency for audio
+        // Set oscillator properties
+        const waveType = document.getElementById('waveType')?.value || 'sine';
+        oscillator.type = waveType;
+        oscillator.frequency.setValueAtTime(frequency * 50, audioContext.currentTime); // Scale up for audible frequency
         
-        // Set gain (volume)
-        gainNode.gain.setValueAtTime(amplitude * 0.1, context.currentTime); // Scale down for comfortable listening
+        // Apply filter effect to volume
+        let volume = amplitude * 0.1; // Base volume
+        if (filterType !== 'none') {
+            const attenuation = calculateAttenuation(frequency, cutoffFreq, filterType);
+            volume *= attenuation;
+        }
+        
+        gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
         
         // Connect nodes
         oscillator.connect(gainNode);
-        gainNode.connect(context.destination);
+        gainNode.connect(audioContext.destination);
         
         // Start oscillator
         oscillator.start();
-        
         isAudioPlaying = true;
         
-        // Update button text
-        const playBtn = document.querySelector('button[onclick="playAudio()"]');
-        if (playBtn) {
-            playBtn.innerHTML = '<i class="fas fa-pause"></i> Pause Audio';
-        }
-        
-        // Auto-stop after 3 seconds to prevent endless playing
-        setTimeout(() => {
-            if (isAudioPlaying) {
-                stopAudio();
-            }
-        }, 3000);
-        
     } catch (error) {
-        console.error('Error playing audio:', error);
-        alert('Audio playback is not supported in this browser or context.');
+        console.error('Audio playback failed:', error);
+        alert('Audio playback failed. Please check your browser settings.');
     }
 }
 
 function stopAudio() {
     if (oscillator) {
-        try {
-            oscillator.stop();
-            oscillator.disconnect();
-        } catch (error) {
-            console.error('Error stopping audio:', error);
-        }
+        oscillator.stop();
+        oscillator.disconnect();
         oscillator = null;
     }
-    
     if (gainNode) {
         gainNode.disconnect();
         gainNode = null;
     }
-    
     isAudioPlaying = false;
-    
-    // Update button text
-    const playBtn = document.querySelector('button[onclick="playAudio()"]');
-    if (playBtn) {
-        playBtn.innerHTML = '<i class="fas fa-play"></i> Play Audio';
-    }
 }
+
 
 // Utility Functions
 function debounce(func, wait) {
