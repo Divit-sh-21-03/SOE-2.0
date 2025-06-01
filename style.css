@@ -1569,6 +1569,12 @@ body {
     gap: 1rem;
     margin-bottom: 2rem;
 }
+  .contact-photo {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 
 .contact-header i {
     font-size: 3rem;
