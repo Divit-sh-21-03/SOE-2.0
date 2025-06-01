@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer of Electronics 2.0 - ElectroMos IIT Bhilai</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://www.iitbhilai.ac.in/images/logo.png" alt="IIT Bhilai" class="logo-img">
+                <span class="nav-title">ElectroMos</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#sessions" class="nav-link">Sessions <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#pcb-session">PCB Design</a>
+                        <a href="#iot-session">IoT & Analytics</a>
+                        <a href="#signal-session">Signal Processing</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#demos" class="nav-link">Interactive Demos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="floating-circuit"></div>
+            <div class="floating-circuit"></div>
+            <div class="floating-circuit"></div>
+            <div class="animated-grid"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-text">May - July 2025</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">Summer of</span>
+                <span class="title-line highlight">Electronics 2.0</span>
+            </h1>
+            <p class="hero-subtitle">Summer's heating up—and so are our circuits! Welcome to a hands-on, future-focused learning adventure that'll spark both your creativity and your resume.</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Topics</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Hours Learning</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Possibilities</span>
+                </div>
+            </div>
+            <div class="hero-cta">
+                <a href="https://chat.whatsapp.com/KxV7IaMJYDn4HOmiKmwqh7" target="_blank" class="btn btn--primary cta-primary">
+                    <i class="fab fa-whatsapp"></i>
+                    Join WhatsApp Group
+                </a>
+                <button class="btn btn--secondary cta-secondary" onclick="document.getElementById('sessions').scrollIntoView({behavior: 'smooth'})">
+                    <i class="fas fa-rocket"></i>
+                    Explore Sessions
+                </button>
+            </div>
+            <div class="hero-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Kickoff: 30th May, 2025 (1st Session)</span>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="circuit-board"></div>
+            <div class="pulse-rings"></div>
+        </div>
+    </section>
+
+    <!-- Sessions Section -->
+    <section id="sessions" class="sessions">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Session Series</h2>
+                <p class="section-subtitle">Three immersive sessions designed to transform you into an electronics wizard</p>
+            </div>
+            
+            <!-- PCB Design Session -->
+            <div id="pcb-session" class="session-card">
+                <div class="session-icon">🔌</div>
+                <div class="session-content">
+                    <h3 class="session-title">PCB Design with KiCad</h3>
+                    <p class="session-description">Learn PCB design from schematic to manufacturing with KiCad</p>
+                    <div class="instructors-grid">
+                        <div class="instructor-card">
+                            <h4>Madan</h4>
+                            <ul>
+                                <li>Introduction</li>
+                                <li>Important terms</li>
+                                <li>Layers</li>
+                            </ul>
+                        </div>
+                        <div class="instructor-card">
+                            <h4>Jayant</h4>
+                            <ul>
+                                <li>Workflow</li>
+                                <li>Schematic</li>
+                                <li>KiCad</li>
+                            </ul>
+                        </div>
+                        <div class="instructor-card">
+                            <h4>Jay</h4>
+                            <ul>
+                                <li>KiCad</li>
+                                <li>PCB Editor</li>
+                                <li>Gerber files</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IoT Session -->
+            <div id="iot-session" class="session-card">
+                <div class="session-icon">📊</div>
+                <div class="session-content">
+                    <h3 class="session-title">IoT & Data Analytics</h3>
+                    <p class="session-description">Build IoT systems and analyze sensor data in real-time</p>
+					<div class="instructors-grid">
+                        <div class="instructor-card">
+                            <h4>Hamsika</h4>
+                            <ul>
+                                <li>IOT Architechture</li>
+                                <li>Communication Protocols</li>
+                                <li>Applications</li>
+                            </ul>
+                        </div>
+                        <div class="instructor-card">
+                            <h4>Nitin</h4>
+                            <ul>
+                                <li>IOT Platforms</li>
+                                <li>Protocols</li>
+                            </ul>
+                        </div>
+                        <div class="instructor-card">
+                            <h4>Ayan</h4>
+                            <ul>
+                                <li>Data Visualization</li>
+                                <li>Data preprocessing</li>
+                                <li>Dashboard Control</li>
+                            </ul>
+                        </div>
+                    </div>
+					</div>
+                </div>
+            </div>
+
+            <!-- Signal Processing Session -->
+            <div id="Signal-session" class="session-card">
+                <div class="session-icon">📈</div>
+                <div class="session-content">
+                    <h3 class="session-title">Signal Processing in MATLAB</h3>
+                    <p class="session-description">Master digital signal processing with hands-on MATLAB programming</p>
+                    <div class="instructors-grid">    
+						<div class="instructor-card">
+                            <h4>Sachidananda</h4>
+                            <ul>
+                                <li>Introduction</li>
+                                <li>Time shifting/scaling</li>
+                                <li>Fourier transformation and DFT</li>
+								<li>Filters and modulation</li>
+                            </ul>
+                        </div>
+                        <div class="instructor-card">
+                            <h4>Aayush</h4>
+                            <ul>
+                                <li>Convolution and Correlation</li>
+                                <li>Sampling Theorem</li>
+                                <li>Filtering of Noise</li>
+								<li>practical Examples</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+				</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Highlights -->
+    <section class="highlights">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Program Highlights</h2>
+                <p class="section-subtitle">What makes this workshop series special</p>
+            </div>
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <div class="highlight-icon">🛠️</div>
+                    <h3>Hands-on Learning</h3>
+                    <p>Build real projects and gain practical experience with industry-standard tools</p>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">🌐</div>
+                    <h3>Modern Technologies</h3>
+                    <p>Explore cutting-edge tools like KiCad, IoT platforms, and MATLAB</p>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">🚀</div>
+                    <h3>Career Boost</h3>
+                    <p>Add valuable skills to your resume and build an impressive portfolio</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perks & Prizes -->
+    <section class="perks">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Perks & Prizes</h2>
+                <p class="section-subtitle">Amazing rewards await our dedicated participants</p>
+            </div>
+            <div class="perks-grid">
+                <div class="perk-card">
+                    <div class="perk-icon">🏆</div>
+                    <h3>Certificates</h3>
+                    <p>Resume-boosting completion certificates</p>
+                </div>
+                <div class="perk-card">
+                    <div class="perk-icon">🎁</div>
+                    <h3>Tech Rewards</h3>
+                    <p>Exciting tech prizes for active participants</p>
+                </div>
+                <div class="perk-card">
+                    <div class="perk-icon">⚡</div>
+                    <h3>Core Team Fast-track</h3>
+                    <p>Direct pathway to ElectroMos core team</p>
+                </div>
+                <div class="perk-card">
+                    <div class="perk-icon">🎉</div>
+                    <h3>Secret Surprise</h3>
+                    <p>Special mystery event for workshop participants</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demos -->
+    <section id="demos" class="demos">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Interactive Demos</h2>
+                <p class="section-subtitle">Experience the power of electronics through hands-on simulations</p>
+            </div>
+            
+            <!-- IoT Dashboard Demo -->
+            <div class="demo-section">
+                <h3 class="demo-title">
+                    <i class="fas fa-wifi"></i>
+                    IoT Sensor Dashboard
+                </h3>
+                <div class="iot-dashboard">
+                    <div class="dashboard-controls">
+                        <div class="control-group">
+                            <label for="sensorSelect">Add Sensor:</label>
+                            <select id="sensorSelect" class="form-control">
+                                <option value="temperature">Temperature (°C)</option>
+                                <option value="humidity">Humidity (%)</option>
+                                <option value="pressure">Pressure (kPa)</option>
+                                <option value="light">Light (lux)</option>
+                            </select>
+                            <button class="btn btn--primary" onclick="addSensor()">Add Sensor</button>
+                        </div>
+                        <div class="control-group">
+                            <button class="btn btn--secondary" onclick="clearDashboard()">Clear All Data</button>
+                            <button class="btn btn--outline" onclick="toggleDataStream()">
+                                <span id="streamToggle">Start Stream</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="dashboard-grid" id="dashboardGrid">
+                        <div class="dashboard-placeholder">
+                            <i class="fas fa-plus-circle"></i>
+                            <p>Add your first sensor to start monitoring</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signal Processing Demo -->
+            <div class="demo-section">
+                <h3 class="demo-title">
+                    <i class="fas fa-wave-square"></i>
+                    Signal Processing Visualizer
+                </h3>
+                <div class="signal-processor">
+                    <div class="signal-controls">
+                        <div class="control-row">
+                            <div class="control-group">
+                                <label>Signal Type:</label>
+                                <select id="signalType" class="form-control" onchange="updateSignal()">
+                                    <option value="sine">Sine Wave</option>
+                                    <option value="square">Square Wave</option>
+                                    <option value="triangle">Triangle Wave</option>
+                                    <option value="sawtooth">Sawtooth Wave</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label>Frequency (Hz):</label>
+                                <input type="range" id="frequency" min="1" max="20" value="5" class="slider" oninput="updateSignal()">
+                                <span id="freqValue">5</span>
+                            </div>
+                            <div class="control-group">
+                                <label>Amplitude:</label>
+                                <input type="range" id="amplitude" min="0.1" max="2" step="0.1" value="1" class="slider" oninput="updateSignal()">
+                                <span id="ampValue">1.0</span>
+                            </div>
+                        </div>
+                        <div class="control-row">
+                            <div class="control-group">
+                                <label>Filter Type:</label>
+                                <select id="filterType" class="form-control" onchange="applyFilter()">
+                                    <option value="none">No Filter</option>
+                                    <option value="lowpass">Low Pass</option>
+                                    <option value="highpass">High Pass</option>
+                                    <option value="bandpass">Band Pass</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label>Modulation:</label>
+                                <select id="modulation" class="form-control" onchange="applyModulation()">
+                                    <option value="none">No Modulation</option>
+                                    <option value="am">AM</option>
+                                    <option value="fm">FM</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <button class="btn btn--primary" onclick="playAudio()">
+                                    <i class="fas fa-play"></i>
+                                    Play Audio
+                                </button>
+                                <button class="btn btn--secondary" onclick="stopAudio()">
+                                    <i class="fas fa-stop"></i>
+                                    Stop
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="signal-display">
+                        <canvas id="signalCanvas" width="800" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About ElectroMos</h2>
+            </div>
+            <div class="about-content">
+                <p class="about-text">
+                    ElectroMos is the premier electronics club of IIT Bhilai, dedicated to fostering innovation and hands-on learning in electronics and embedded systems. We organize workshops, hackathons, and technical events to help students build practical skills and explore cutting-edge technologies. Our mission is to create a vibrant community of electronics enthusiasts who are passionate about building the future through technology and innovation.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Contact Information</h2>
+            </div>
+            <div class="contact-content">
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <i class="fas fa-user-tie"></i>
+                        <div>
+                            <h3>Developed by</h3>
+                            <h4>Divit Sharma</h4>
+                        </div>
+                    </div>
+                    <div class="contact-details">
+                        <p class="position">Coordinator-Electromos, Sci-Tech Council 2025-26</p>
+                        <p class="institution">Indian Institute Of Technology Bhilai</p>
+                        <div class="contact-info">
+                            <a href="tel:+919109340021" class="contact-link">
+                                <i class="fas fa-phone"></i>
+                                +91 9109340021
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <img src="https://www.iitbhilai.ac.in/images/logo.png" alt="IIT Bhilai" class="footer-logo-img">
+                        <span>ElectroMos - IIT Bhilai</span>
+                    </div>
+                    <p>Empowering the next generation of electronics engineers</p>
+                </div>
+                <div class="footer-right">
+                    <a href="https://chat.whatsapp.com/KxV7IaMJYDn4HOmiKmwqh7" target="_blank" class="btn btn--primary">
+                        <i class="fab fa-whatsapp"></i>
+                        Join WhatsApp Group
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ElectroMos, IIT Bhilai. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
